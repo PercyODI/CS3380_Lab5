@@ -15,69 +15,28 @@
             $mylink = mysqli_connect( $SERVER, $USER, $PASS, $DATABASE) or die("<h3>Sorry, could not connect to database.</h3><br/>Please contact your system's admin for more help\n");
             $_SESSION['mylink'] = $mylink;
             
-            function query1() {
-                $sql = "SELECT District, Population FROM city WHERE Name='Springfield' ORDER BY Population DESC";
-                $result = mysqli_query($_SESSION['mylink'], $sql);
-                
-                while($data = mysqli_fetch_object($result)) {
-            	$return[] = array(	'district' => $data->District,
-            						'population' => $data->Population,
-            						);
-                }
-                return $return;
-            }
-            
-            function query2() {
-                $sql = "select name, district, population from city where CountryCode = 'BRA' order by name";
-                $result = mysqli_query($_SESSION['mylink'], $sql);
-                
-                while($data = mysqli_fetch_object($result)) {
-            	$return[] = array(	'name' => $data->name,
-            	                    'district' => $data->district,
-            						'population' => $data->population
-            						);
-                }
-                return $return;
-            }
-            
-            function query3() {
-                $sql = "select name, continent, surfacearea from country order by surfacearea limit 20";
-                $result = mysqli_query($_SESSION['mylink'], $sql);
-                
-                while($data = mysqli_fetch_object($result)) {
-            	$return[] = array(	'name' => $data->name,
-            	                    'continent' => $data->continent,
-            						'surfacearea' => $data->surfacearea
-            						);
-                }
-                return $return;
-            }
-            
-            function query4() {
-                $sql = "select name, continent, governmentform, gnp from country where gnp > 200000 order by name;";
-                $result = mysqli_query($_SESSION['mylink'], $sql);
-                
-                while($data = mysqli_fetch_object($result)) {
-            	$return[] = array(	'name' => $data->name,
-            	                    'continent' => $data->continent,
-            						'governmentform' => $data->governmentform,
-            						'gnp' => $data->gnp
-            						);
-                }
-                return $return;
-            }
-            
             function run_sql_query($sql="") {
-                if ($sql = "") {
-                    return NULL;
-                }
-                $mysql_result = mysqli_query($_SESSION['mylink'], $sql);
+                $result = mysqli_query($_SESSION['mylink'], $sql);
                 
-                while($data = mysqli_fetch_array($mysql_result)) {
+                $columns = mysqli_fetch_fields($result);
+                
+                $j = 0;
+                while($data = mysqli_fetch_row($result)) {
                     
+                    for($i = 0; $i < count($columns); $i++) {
+                        $return[$j][] = $data[$i - 0];
+                    }
+                    $j++;
                 }
                 
+                return array($columns, $return);
             }
+            
+            $query_list = array(    "SELECT District, Population FROM city WHERE Name='Springfield' ORDER BY Population DESC",
+                                    "select name, district, population from city where CountryCode = 'BRA' order by name",
+                                    "select name, continent, surfacearea from country order by surfacearea limit 20",
+                                    "select name, continent, governmentform, gnp from country where gnp > 200000 order by name"
+                                    )
         ?>
         
     </head>
@@ -85,7 +44,15 @@
         <div class="container">
             <!--<br>-->
             <div class="row">
-                <form action="<?=$_SERVER['PHP_SELF']?>" method="POST" class="col-md-4">
+                <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
+                    <select name="sqlDropDown">
+                        <?php
+                            $i = 0;
+                            foreach($query_list as $value) {
+                                echo "<option value='Query" . $i++ . "'>" . $value ."</option>";
+                            }
+                        ?>
+                    </select>
                     <input type="submit" name="submit" value="Go">
                 </form>
             </div>
@@ -93,12 +60,21 @@
                 <div class="col-md-6 col-md-offset-3">
                 <table class="table table-hove table-striped">
                 <?php
-                    // Query 2
                     
-                    $return = query4();
+                    list($columns, $return) = run_sql_query($query_list[3]);
+                    
+                    echo "<tr>";
+                    foreach($columns as $value) {
+                        echo "<th class='text-center'>" . ucwords($value->name) . "</th>";
+                    }
+                    echo "</tr>";
         		    
-        		    foreach($return as $key => $value) {
-        		        echo "<tr><td>" . $value[0] . '</td><td>' . $value['continent'] . "</td><td>" . $value['governmentform'] . "</td><td>" . $value['gnp']."</td></tr>";
+        		    foreach($return as $value) {
+        		        echo "<tr>";
+        		        for($i = 0; $i < count($columns); $i++) {
+        		            echo "<td>" . $value[$i] . "</td>";
+        		        }
+        		        echo "</tr>";
         		    }
                 ?>
                 </table>
