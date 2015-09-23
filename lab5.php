@@ -31,7 +31,9 @@
                                     "select name from city where name like 'B%s' order by population desc",
                                     "select city.name, country.name, city.population from city inner join country on city.countrycode = country.code where city.population > 6000000 order by city.population desc",
                                     "select country.name, country.indepyear, country.region from country inner join countrylanguage on country.code = countrylanguage.countrycode where countrylanguage.language = 'English' and countrylanguage.isofficial='T' order by country.region, country.name",
-                                    "select countryName, cityName, (cityPop / countryPop) as PercentOfPopulationInCapital from (select country.capital, country.name as 'countryName', city.name as 'cityName', city.population as 'cityPop', country.population as 'countryPop' from city inner join country on country.capital = city.id) as table1 order by PercentOfPopulationInCapital desc");
+                                    "select countryName, cityName, (cityPop / countryPop) as PercentOfPopulationInCapital from (select country.capital, country.name as 'countryName', city.name as 'cityName', city.population as 'cityPop', country.population as 'countryPop' from city inner join country on country.capital = city.id) as table1 order by PercentOfPopulationInCapital desc",
+                                    "select language, name, ((percentage * population) / 100) as `Percentage of Speakers` from country inner join (select countrycode, language, percentage from countrylanguage where isOfficial = 'T') as languageTable on country.code = languageTable.countrycode order by `Percentage of Speakers` desc",
+                                    "select name, region, gnp, gnpold, ((gnp - gnpold) / gnpold) as `Real GNP Change` from country where gnp is not null and gnpold is not null order by `Real GNP Change` desc");
                                     // 10 11
                                     // Cross off when completed.
                                     // Come back to 5...seems off.
@@ -71,7 +73,9 @@
                             <?php
                                 $i = 0;
                                 foreach($query_list as $value) {
-                                    echo "<option value='" . $i++ . "'>" . $value ."</option>";
+                                    $i == $_POST['sqlDropDown'] ? $selectedTag = "selected" : $selectedTag = "";
+                                    
+                                    echo "<option value='" . $i++ . "' $selectedTag >Query $i</option>";
                                 }
                             ?>
                         </select>
