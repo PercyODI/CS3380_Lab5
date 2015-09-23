@@ -2,6 +2,14 @@
 <html>
     <head>
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <style>
+            #queryResults {
+                /*position: fixed; */
+                /*bottom: 10px; */
+                /*right: 10px; */
+                /*border: 0;*/
+            }
+        </style>
         <?php
             ini_set('display_errors',1);
             ini_set('display_startup_errors',1);
@@ -15,8 +23,25 @@
             $mylink = mysqli_connect( $SERVER, $USER, $PASS, $DATABASE) or die("<h3>Sorry, could not connect to database.</h3><br/>Please contact your system's admin for more help\n");
             $_SESSION['mylink'] = $mylink;
             
-            function run_sql_query($sql="") {
-                $result = mysqli_query($_SESSION['mylink'], $sql);
+            $query_list = array(    "SELECT District, Population FROM city WHERE Name='Springfield' ORDER BY Population DESC",
+                                    "select name, district, population from city where CountryCode = 'BRA' order by name",
+                                    "select name, continent, surfacearea from country order by surfacearea limit 20",
+                                    "select name, continent, governmentform, gnp from country where gnp > 200000 order by name",
+                                    "select name from country where lifeexpectancy is not null order by lifeexpectancy limit 10 offset 9",
+                                    "select name from city where name like 'B%s' order by population desc",
+                                    "select city.name, country.name, city.population from city inner join country on city.countrycode = country.code where city.population > 6000000 order by city.population desc",
+                                    "select country.name, country.indepyear, country.region from country inner join countrylanguage on country.code = countrylanguage.countrycode where countrylanguage.language = 'English' and countrylanguage.isofficial='T' order by country.region, country.name",
+                                    "select countryName, cityName, (cityPop / countryPop) as PercentOfPopulationInCapital from (select country.capital, country.name as 'countryName', city.name as 'cityName', city.population as 'cityPop', country.population as 'countryPop' from city inner join country on country.capital = city.id) as table1 order by PercentOfPopulationInCapital desc");
+                                    // 10 11
+                                    // Cross off when completed.
+                                    // Come back to 5...seems off.
+            
+            function run_sql_query() {
+                global $query_list;
+                if (!isset($_POST['sqlDropDown'])) {
+                    $_POST['sqlDropDown'] = 0;
+                }
+                $result = mysqli_query($_SESSION['mylink'], $query_list[$_POST['sqlDropDown']]);
                 
                 $columns = mysqli_fetch_fields($result);
                 
@@ -32,33 +57,32 @@
                 return array($columns, $return);
             }
             
-            $query_list = array(    "SELECT District, Population FROM city WHERE Name='Springfield' ORDER BY Population DESC",
-                                    "select name, district, population from city where CountryCode = 'BRA' order by name",
-                                    "select name, continent, surfacearea from country order by surfacearea limit 20",
-                                    "select name, continent, governmentform, gnp from country where gnp > 200000 order by name"
-                                    )
+            
         ?>
         
     </head>
     <body>
         <div class="container">
-            <!--<br>-->
+            <br>
             <div class="row">
-                <form action="<?=$_SERVER['PHP_SELF']?>" method="POST">
-                    <select name="sqlDropDown">
-                        <?php
-                            $i = 0;
-                            foreach($query_list as $value) {
-                                echo "<option value='Query" . $i++ . "'>" . $value ."</option>";
-                            }
-                        ?>
-                    </select>
-                    <input type="submit" name="submit" value="Go">
+                <form action="<?=$_SERVER['PHP_SELF']?>" method="POST" class="form-inline">
+                    <div class="form-group">
+                        <select name="sqlDropDown">
+                            <?php
+                                $i = 0;
+                                foreach($query_list as $value) {
+                                    echo "<option value='" . $i++ . "'>" . $value ."</option>";
+                                }
+                            ?>
+                        </select>
+                    </div>
+                    <button type="submit" type="submit" name="submit" value="Go" class="btn btn-primary">Submit</button>
                 </form>
             </div>
+            <br>
             <div class="row">
-                <div class="col-md-6 col-md-offset-3">
-                <table class="table table-hove table-striped">
+                <!--<div class="col-md-6 col-md-offset-3">-->
+                <table class="table table-hover table-striped">
                 <?php
                     
                     list($columns, $return) = run_sql_query($query_list[3]);
@@ -76,9 +100,14 @@
         		        }
         		        echo "</tr>";
         		    }
+        		    
                 ?>
                 </table>
-                </div>
+                <button class='btn btn-primary pull-right' id='queryResults'>
+                <?php
+                    echo "Number of query results: <span class='badge'>" . count($return) . "</span>";
+                ?>
+                </button>
             </div>
         </div>
     </body>
