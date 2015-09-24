@@ -3,7 +3,6 @@
   <head>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <style>
       select[name="sqlDropDown"] {
         height: 34px;
@@ -23,6 +22,12 @@
       
       /*.fa-globe {*/
       /*  color: #6E8D6E;*/
+      /*}*/
+      
+      /*@media only screen and (max-width : 480px) {*/
+      /*  td {*/
+      /*      font-size: 250px;*/
+      /*  }*/
       /*}*/
       
     </style>
@@ -75,9 +80,10 @@
         return array($columns, $return);
       }
     ?>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
   </head>
   
-  <body onload="onPageLoad()">
+  <body>
     <nav class="navbar navbar-default navbar-fixed-top nav-top-cust">
       <div class="container">
           <form action="<?=$_SERVER['PHP_SELF']?>" method="POST" class="navbar-form navbar-left">
@@ -148,5 +154,9 @@
         </button>
       </dvi>
     </nav>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>
