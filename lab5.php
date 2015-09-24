@@ -46,17 +46,83 @@
       $_SESSION['mylink'] = $mylink;
       
       $query_list = array(    
-                  "SELECT District, Population FROM city WHERE Name='Springfield' ORDER BY Population DESC",
-                  "SELECT name, district, population FROM city WHERE CountryCode = 'BRA' ORDER BY name",
-                  "SELECT name, continent, surfacearea AS `Surface Area` FROM country ORDER BY surfacearea LIMIT 20",
-                  "SELECT name, continent, governmentform AS `Form of Government`, gnp AS `GNP` FROM country WHERE gnp > 200000 ORDER BY name",
-                  "SELECT name FROM country WHERE lifeexpectancy is not null ORDER BY lifeexpectancy LIMIT 10 OFFSET 9",
-                  "SELECT name FROM city WHERE name like 'B%s' ORDER BY population DESC",
-                  "SELECT city.name AS `City Name`, country.name AS `Country Name`, city.population AS `City Population` FROM city inner join country on city.countrycode = country.code WHERE city.population > 6000000 ORDER BY city.population DESC",
-                  "SELECT country.name AS `Country Name`, country.indepyear AS `Year of Independence`, country.region FROM country inner join countrylanguage on country.code = countrylanguage.countrycode WHERE countrylanguage.language = 'English' and countrylanguage.isofficial='T' ORDER BY country.region, country.name",
-                  "SELECT countryName AS `Country Name`, cityName AS `City Name`, (cityPop / countryPop) AS `Percent of Population In Capital` FROM (SELECT country.capital, country.name AS 'countryName', city.name AS 'cityName', city.population AS 'cityPop', country.population AS 'countryPop' FROM city inner join country on country.capital = city.id) AS table1 ORDER BY `Percent of Population In Capital` DESC",
-                  "SELECT language, name, ((percentage * population) / 100) AS `Percentage of Speakers` FROM country inner join (SELECT countrycode, language, percentage FROM countrylanguage WHERE isOfficial = 'T') AS languageTable on country.code = languageTable.countrycode ORDER BY `Percentage of Speakers` DESC",
-                  "SELECT name, region, gnp AS `GNP`, gnpold AS `Old GNP`, ((gnp - gnpold) / gnpold) AS `Real GNP Change` FROM country WHERE gnp is not null and gnpold is not null ORDER BY `Real GNP Change` DESC");
+                  "SELECT District, Population 
+                    FROM city 
+                    WHERE Name='Springfield' 
+                    ORDER BY Population DESC",
+                  "SELECT name, district, population 
+                    FROM city 
+                    WHERE CountryCode = 'BRA' 
+                    ORDER BY name",
+                  "SELECT name, continent, surfacearea AS `Surface Area` 
+                    FROM country 
+                    ORDER BY surfacearea 
+                    LIMIT 20",
+                  "SELECT name, 
+                          continent, 
+                          governmentform AS `Form of Government`, 
+                          gnp AS `GNP` 
+                    FROM country 
+                    WHERE gnp > 200000 
+                    ORDER BY name",
+                  "SELECT name 
+                    FROM country 
+                    WHERE lifeexpectancy IS NOT NULL 
+                    ORDER BY lifeexpectancy 
+                    LIMIT 10 
+                    OFFSET 9",
+                  "SELECT name 
+                    FROM city 
+                    WHERE name like 'B%s' 
+                    ORDER BY population DESC",
+                  "SELECT city.name AS `City Name`, 
+                          country.name AS `Country Name`, 
+                          city.population AS `City Population` 
+                    FROM city 
+                    INNER JOIN country 
+                    ON city.countrycode = country.code 
+                    WHERE city.population > 6000000 
+                    ORDER BY city.population DESC",
+                  "SELECT country.name AS `Country Name`, 
+                          country.indepyear AS `Year of Independence`, 
+                          country.region 
+                    FROM country 
+                    INNER JOIN countrylanguage 
+                    ON country.code = countrylanguage.countrycode 
+                    WHERE countrylanguage.language = 'English' 
+                    AND countrylanguage.isofficial='T' 
+                    ORDER BY country.region, country.name",
+                  "SELECT countryName AS `Country Name`, 
+                          cityName AS `City Name`, 
+                          (cityPop / countryPop) AS `Percent of Population In Capital` 
+                    FROM 
+                      (SELECT country.capital, country.name AS 'countryName', 
+                              city.name AS 'cityName', 
+                              city.population AS 'cityPop', 
+                              country.population AS 'countryPop' 
+                      FROM city 
+                      INNER JOIN country 
+                      ON country.capital = city.id) AS table1 
+                    ORDER BY `Percent of Population In Capital` DESC",
+                  "SELECT language, 
+                          name, 
+                          ((percentage * population) / 100) AS `Percentage of Speakers` 
+                    FROM country 
+                    INNER JOIN 
+                      (SELECT countrycode, language, percentage 
+                      FROM countrylanguage 
+                      WHERE isOfficial = 'T') AS languageTable 
+                    ON country.code = languageTable.countrycode 
+                    ORDER BY `Percentage of Speakers` DESC",
+                  "SELECT name, 
+                          region, 
+                          gnp AS `GNP`, 
+                          gnpold AS `Old GNP`, 
+                          ((gnp - gnpold) / gnpold) AS `Real GNP Change` 
+                    FROM country 
+                    WHERE gnp IS NOT NULL 
+                    AND gnpold IS NOT NULL 
+                    ORDER BY `Real GNP Change` DESC");
                   // 10 11
                   // Cross off when completed.
                   // Come back to 5...seems off.
