@@ -1,3 +1,9 @@
+<!-- Author:
+      Pearse Hutson
+      pah9qd
+      14040826
+-->
+
 <!DOCTYPE html>
 <html>
   <head>
@@ -31,17 +37,6 @@
         margin-bottom: 10px;
         font-size: 16px;
       }
-      
-      /*.fa-globe {*/
-      /*  color: #6E8D6E;*/
-      /*}*/
-      
-      /*@media only screen and (max-width : 480px) {*/
-      /*  td {*/
-      /*      font-size: 250px;*/
-      /*  }*/
-      /*}*/
-      
     </style>
 
     <?php
@@ -157,7 +152,7 @@
       // Query 4
       "All countries with a GNP greater than 200,000",
       // Query 5
-      "The 10th through the 19th countries in life expectancy",
+      "The 10th through 19th countries in life expectancy",
       // Query 6
       "Al cities that start with the letter 'B' and end in the letter 's'",
       // Query 7
@@ -218,7 +213,6 @@
     <br>
     <div class="container">
       <div class="row">
-        
         <?php
           if(isset($_POST['sqlDropDown'])) {
             echo "<div class='well text-center'><b>" . $query_descriptions[$_POST['sqlDropDown']] . "</b></div>";
@@ -267,9 +261,5 @@
         </button>
       </dvi>
     </nav>
-    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
-    <!-- Include all compiled plugins (below), or include individual files as needed -->
-    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>
